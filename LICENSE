@@ -24,3 +24,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 The views and conclusions contained in the software and documentation are those
 of the authors and should not be interpreted as representing official policies, 
 either expressed or implied, of the FreeBSD Project.
+
+Changes made by Sourabh Singh:
+Date: 2024-12-07
+Description of Modifications:
+Removed obsolete methods from Printer.cs.
+Refactored the code to remove redundant functionality and improve readability and efficiency.
+Improved exception handling and streamlined the printing process.
