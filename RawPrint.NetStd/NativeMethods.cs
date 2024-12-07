@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace RawPrint.NetStd
 {
@@ -19,21 +17,17 @@ namespace RawPrint.NetStd
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct PRINTER_DEFAULTS
     {
-        public string pDatatype;
-
-        private IntPtr pDevMode;
-
+        public string? pDatatype;  // Nullable if the value can be null
+        private IntPtr pDevMode; // IntPtr can be null, use IntPtr.Zero for default uninitialized value
         public PRINTER_ACCESS_MASK DesiredPrinterAccess;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     internal struct DOC_INFO_1
     {
-        public string pDocName;
-
-        public string pOutputFile;
-
-        public string pDataType;
+        public string? pDocName;  // Nullable if the value can be null
+        public string? pOutputFile;  // Nullable if the value can be null
+        public string? pDataType;  // Nullable if the value can be null
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -46,7 +40,7 @@ namespace RawPrint.NetStd
         public string pDataFile;
         public string pConfigFile;
         public string pHelpFile;
-        public IntPtr pDependentFiles;
+        public IntPtr pDependentFiles; // IntPtr can be null
         public string pMonitorName;
         public string pDefaultDataType;
     }
@@ -91,7 +85,6 @@ namespace RawPrint.NetStd
         [DllImport("winspool.drv", EntryPoint = "SetJobA", SetLastError = true)]
         public static extern int SetJob(IntPtr hPrinter, uint JobId, uint Level, IntPtr pJob, uint Command_Renamed);
     }
-
 
     // ReSharper restore FieldCanBeMadeReadOnly.Local
     // ReSharper restore InconsistentNaming
