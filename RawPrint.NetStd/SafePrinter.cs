@@ -11,11 +11,12 @@ namespace RawPrint.NetStd
     internal class SafePrinter : SafeHandleZeroOrMinusOneIsInvalid
     {
         private SafePrinter(IntPtr hPrinter)
-            : base(true)
+            : base(true)  // Indicates that the handle should be released when the object is disposed
         {
             handle = hPrinter;
         }
 
+        // Override the ReleaseHandle method to properly close the printer handle
         protected override bool ReleaseHandle()
         {
             if (IsInvalid)
@@ -29,6 +30,7 @@ namespace RawPrint.NetStd
             return result;
         }
 
+        // Starts a new document on the printer and returns the document ID
         public uint StartDocPrinter(DOC_INFO_1 di1)
         {
             var id = NativeMethods.StartDocPrinterW(handle, 1, ref di1);
@@ -44,6 +46,7 @@ namespace RawPrint.NetStd
             return id;
         }
 
+        // Ends the document on the printer
         public void EndDocPrinter()
         {
             if (NativeMethods.EndDocPrinter(handle) == 0)
@@ -52,6 +55,7 @@ namespace RawPrint.NetStd
             }
         }
 
+        // Starts a new page on the printer
         public void StartPagePrinter()
         {
             if (NativeMethods.StartPagePrinter(handle) == 0)
@@ -60,6 +64,7 @@ namespace RawPrint.NetStd
             }
         }
 
+        // Ends the current page on the printer
         public void EndPagePrinter()
         {
             if (NativeMethods.EndPagePrinter(handle) == 0)
@@ -68,6 +73,7 @@ namespace RawPrint.NetStd
             }
         }
 
+        // Writes data to the printer
         public void WritePrinter(byte[] buffer, int size)
         {
             int written = 0;
@@ -77,10 +83,12 @@ namespace RawPrint.NetStd
             }
         }
 
+        // Retrieves the dependent files for the printer driver
         public IEnumerable<string> GetPrinterDriverDependentFiles()
         {
             int bufferSize = 0;
 
+            // Retrieve the necessary buffer size
             if (NativeMethods.GetPrinterDriver(handle, null, 3, IntPtr.Zero, 0, ref bufferSize) != 0 || Marshal.GetLastWin32Error() != 122) // 122 = ERROR_INSUFFICIENT_BUFFER
             {
                 throw new Win32Exception();
@@ -90,6 +98,7 @@ namespace RawPrint.NetStd
 
             try
             {
+                // Retrieve the printer driver information
                 if (NativeMethods.GetPrinterDriver(handle, null, 3, ptr, bufferSize, ref bufferSize) == 0)
                 {
                     throw new Win32Exception();
@@ -97,7 +106,7 @@ namespace RawPrint.NetStd
 
                 var di3 = (DRIVER_INFO_3)Marshal.PtrToStructure(ptr, typeof(DRIVER_INFO_3));
 
-                return ReadMultiSz(di3.pDependentFiles).ToList(); // We need a list because FreeHGlobal will be called on return
+                return ReadMultiSz(di3.pDependentFiles).ToList(); // Convert dependent files to a list
             }
             finally
             {
@@ -105,6 +114,7 @@ namespace RawPrint.NetStd
             }
         }
 
+        // Helper method to read a multi-string from a pointer
         private static IEnumerable<string> ReadMultiSz(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
@@ -138,6 +148,7 @@ namespace RawPrint.NetStd
             }
         }
 
+        // Opens the printer and returns a SafePrinter instance
         public static SafePrinter OpenPrinter(string printerName, ref PRINTER_DEFAULTS defaults)
         {
             IntPtr hPrinter;
@@ -149,6 +160,5 @@ namespace RawPrint.NetStd
 
             return new SafePrinter(hPrinter);
         }
-
     }
 }
