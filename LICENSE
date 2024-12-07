@@ -28,6 +28,6 @@ either expressed or implied, of the FreeBSD Project.
 Changes made by Sourabh Singh:
 Date: 2024-12-07
 Description of Modifications:
-Removed obsolete methods from Printer.cs.
-Refactored the code to remove redundant functionality and improve readability and efficiency.
-Improved exception handling and streamlined the printing process.
+1. Removed obsolete methods from Printer.cs.
+2. Refactored the code to remove redundant functionality and improve readability and efficiency.
+3. Improved exception handling and streamlined the printing process.
