@@ -89,7 +89,8 @@ namespace RawPrint.NetStd
             int bufferSize = 0;
 
             // Retrieve the necessary buffer size
-            if (NativeMethods.GetPrinterDriver(handle, null, 3, IntPtr.Zero, 0, ref bufferSize) != 0 || Marshal.GetLastWin32Error() != 122) // 122 = ERROR_INSUFFICIENT_BUFFER
+            // AB if (NativeMethods.GetPrinterDriver(handle, null, 3, IntPtr.Zero, 0, ref bufferSize) != 0 || Marshal.GetLastWin32Error() != 122) // 122 = ERROR_INSUFFICIENT_BUFFER
+            if (NativeMethods.GetPrinterDriver(handle, string.Empty, 3, IntPtr.Zero, 0, ref bufferSize) != 0 || Marshal.GetLastWin32Error() != 122) // 122 = ERROR_INSUFFICIENT_BUFFER
             {
                 throw new Win32Exception();
             }
@@ -99,12 +100,14 @@ namespace RawPrint.NetStd
             try
             {
                 // Retrieve the printer driver information
-                if (NativeMethods.GetPrinterDriver(handle, null, 3, ptr, bufferSize, ref bufferSize) == 0)
+                // AB if (NativeMethods.GetPrinterDriver(handle, null, 3, ptr, bufferSize, ref bufferSize) == 0)
+                if (NativeMethods.GetPrinterDriver(handle, string.Empty, 3, ptr, bufferSize, ref bufferSize) == 0)
                 {
                     throw new Win32Exception();
                 }
 
-                var di3 = (DRIVER_INFO_3)Marshal.PtrToStructure(ptr, typeof(DRIVER_INFO_3));
+                // AB                 var di3 = (DRIVER_INFO_3)Marshal.PtrToStructure(ptr, typeof(DRIVER_INFO_3));
+                var di3 = Marshal.PtrToStructure<DRIVER_INFO_3>(ptr);
 
                 return ReadMultiSz(di3.pDependentFiles).ToList(); // Convert dependent files to a list
             }

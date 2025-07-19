@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8.0-windows</TargetFramework>
+		<TargetFramework>net9.0-windows7.0</TargetFramework>
 		<!-- Update to .NET 8.0 Windows -->
 		<Nullable>enable</Nullable>
 		<!-- Enable Nullable Context for better null safety -->

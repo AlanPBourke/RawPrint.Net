@@ -1,3 +1,5 @@
 .vs/
 RawPrint.NetStd/bin
 RawPrint.NetStd/obj
+/RawPrint.Net/obj
+/RawPrint.Net/bin
